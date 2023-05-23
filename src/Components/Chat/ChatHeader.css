@@ -12,6 +12,11 @@
   padding: 10px;
 }
 
+.chatHeader__left {
+  display: flex;
+  flex: 0.5;
+}
+
 .chatHeader__left > h3 {
   display: flex;
   align-items: center;
