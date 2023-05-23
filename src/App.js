@@ -4,6 +4,7 @@ import Sidebar from './Components/Sidebar/Sidebar';
 import Chat from './Components/Chat/Chat';
 import Login from './Components/Login/Login';
 import { auth } from './firebase';
+import Serverlist from './Components/Serverlist/Serverlist';
 
 export const AppContext = createContext();
 
@@ -42,6 +43,8 @@ function App() {
 
         {user ? (
           <>
+            <Serverlist />
+
             <Sidebar />
 
             <Chat />

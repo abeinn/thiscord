@@ -1,0 +1,9 @@
+.server {
+  display: flex;
+  padding: 15px;
+}
+
+.server > .MuiAvatar-root {
+  padding: 10px;
+  cursor: pointer;
+}
