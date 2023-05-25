@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import './Serverlist.css';
 import Server from './Server';
 import { AppContext } from '../../App';
-import { collection, doc, documentId, getDocs, onSnapshot, where } from 'firebase/firestore';
+import { collection, doc, documentId, getDocs, onSnapshot, query, where } from 'firebase/firestore';
 import db from '../../firebase';
 
 function Serverlist() {
@@ -13,10 +13,19 @@ function Serverlist() {
   useEffect(() => {
     
     onSnapshot(doc(db, 'users', user.uid), (snapshot) => {
+
+      if (!snapshot.exists()) {
+        return;
+      }
       
       const serverIds = snapshot.data().servers;
 
-      getDocs(collection(db, 'servers'), where(documentId(), 'in', serverIds)).then((snapshot) => {
+      if (serverIds.length === 0) {
+        setServers([]);
+        return;
+      }
+
+      getDocs(query(collection(db, 'servers'), where(documentId(), 'in', serverIds))).then((snapshot) => {
         setServers(
           snapshot.docs.map((doc) => ({
             id: doc.id,

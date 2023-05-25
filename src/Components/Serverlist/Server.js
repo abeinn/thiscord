@@ -8,7 +8,7 @@ import db from '../../firebase';
 
 function Server( { id, name, type } ) {
 
-  const { user } = useContext(AppContext);
+  const { user, setServerId, setServerName, setChannelId, setChannelName } = useContext(AppContext);
 
   function handleAddServer() {
     const serverName = prompt('Enter a new server name');
@@ -16,13 +16,14 @@ function Server( { id, name, type } ) {
       addDoc(collection(db, 'servers'), {
         serverName: serverName
       }).then((docRef) => {
-        getDoc(doc(db, 'users', user.uid)).then((docSnapshot) => {
-          const servers = docSnapshot.data().servers;
+        getDoc(doc(db, 'users', user.uid)).then((snapshot) => {
+          const servers = snapshot.data().servers;
           servers.push(docRef.id);
           setDoc(doc(db, 'users', user.uid), {
             email: user.email,
             displayName: user.displayName,
-            servers: servers
+            servers: servers,
+            uid: user.uid
           })
         })
       })
@@ -33,13 +34,22 @@ function Server( { id, name, type } ) {
     <div className='server'>
 
       {(type === 'server') ? (
-        <Avatar>{name.charAt(0)}</Avatar>
+        <Avatar onClick={() => {
+          setServerId(id);
+          setServerName(name);
+          setChannelId(null);
+          setChannelName('');
+        }}>
+          {name.charAt(0)}
+        </Avatar>
       ): (type === 'add') ? (
         <Avatar onClick={handleAddServer}>
           <AddIcon fontSize='large'/>
         </Avatar>
       ): (type === 'dms') ? (
-        <Avatar> </Avatar>
+        <Avatar onClick={() => {
+          
+        }}> </Avatar>
       ): <></>}
 
     </div>

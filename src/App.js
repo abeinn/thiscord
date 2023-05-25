@@ -14,6 +14,8 @@ function App() {
   const [user, setUser] = useState(null);
   const [channelId, setChannelId] = useState(null);
   const [channelName, setChannelName] = useState('');
+  const [serverId, setServerId] = useState(null);
+  const [serverName, setServerName] = useState('');
 
   useEffect(() => {
     auth.onAuthStateChanged((authUser) => {
@@ -29,6 +31,7 @@ function App() {
       getDoc(doc(db, 'users', authUser.uid)).then((snapshot) => {
         if (!snapshot.exists()) {
           setDoc(doc(db, 'users', authUser.uid), {
+            uid: authUser.uid,
             email: authUser.email,
             displayName: authUser.displayName,
             servers: []
@@ -52,7 +55,11 @@ function App() {
           channelId,
           setChannelId,
           channelName,
-          setChannelName
+          setChannelName,
+          serverId,
+          setServerId,
+          serverName,
+          setServerName
         }}>
 
         {user ? (

@@ -12,22 +12,24 @@ import { addDoc, collection, getDoc, onSnapshot, orderBy, query, serverTimestamp
 
 function Chat() {
 
-  const { user, channelId, channelName } = useContext(AppContext);
+  const { user, channelId, channelName, serverId } = useContext(AppContext);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     if (channelId) {
-      const messages = collection(db, 'channels', channelId, 'messages')
+      const messages = collection(db, 'servers', serverId, 'channels', channelId, 'messages')
       onSnapshot(query(messages, orderBy('timestamp', 'asc')), (snapshot) => {
         setMessages(snapshot.docs.map((doc) => doc.data()))
       });
+    } else {
+      setMessages([]);
     }
-  }, [channelId]);
+  }, [channelId, serverId]);
 
   function sendMessage(e) {
     e.preventDefault();
-    const messages = collection(db, "channels", channelId, "messages");
+    const messages = collection(db, 'servers', serverId, "channels", channelId, "messages");
     addDoc(messages, {
       message: input,
       user: user,

@@ -17,12 +17,12 @@ import { collection, addDoc, onSnapshot } from "firebase/firestore";
 
 function Sidebar() {
 
-  const { user } = useContext(AppContext);
+  const { user, serverName, serverId } = useContext(AppContext);
   const [channels, setChannels] = useState([]);
 
   useEffect(() => {
     
-    onSnapshot(collection(db, 'channels'), (snapshot) => {
+    serverId && onSnapshot(collection(db, 'servers', serverId, 'channels'), (snapshot) => {
       setChannels(
         snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -31,13 +31,17 @@ function Sidebar() {
       )
     });
 
-  }, []);
+  }, [serverId]);
 
   function handleAddChannel() {
+    if (!serverId) {
+      return;
+    }
+
     const channelName = prompt('Enter a new channel name');
 
     if (channelName) {
-      addDoc(collection(db, 'channels'), {
+      addDoc(collection(db, 'servers', serverId, 'channels'), {
         channelName: channelName,
       });
     }
@@ -47,7 +51,7 @@ function Sidebar() {
   return (
     <div className='sidebar'>      
       <div className='sidebar__top'>
-        <h3>Server Name</h3>
+        <h3>{serverName}</h3>
         <ExpandMoreIcon />
       </div>
 
