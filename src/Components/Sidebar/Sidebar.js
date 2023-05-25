@@ -25,8 +25,8 @@ function Sidebar() {
     onSnapshot(collection(db, 'channels'), (snapshot) => {
       setChannels(
         snapshot.docs.map((doc) => ({
-        id: doc.id,
-        channel: doc.data()
+          id: doc.id,
+          channel: doc.data()
         }))
       )
     });
@@ -39,7 +39,7 @@ function Sidebar() {
     if (channelName) {
       addDoc(collection(db, 'channels'), {
         channelName: channelName,
-      })
+      });
     }
 
   }

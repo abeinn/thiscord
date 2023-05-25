@@ -3,8 +3,9 @@ import './App.css';
 import Sidebar from './Components/Sidebar/Sidebar';
 import Chat from './Components/Chat/Chat';
 import Login from './Components/Login/Login';
-import { auth } from './firebase';
+import db, { auth } from './firebase';
 import Serverlist from './Components/Serverlist/Serverlist';
+import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
 
 export const AppContext = createContext();
 
@@ -23,6 +24,19 @@ function App() {
           email: authUser.email,
           displayName: authUser.displayName
         });
+
+      
+      getDoc(doc(db, 'users', authUser.uid)).then((snapshot) => {
+        if (!snapshot.exists()) {
+          setDoc(doc(db, 'users', authUser.uid), {
+            email: authUser.email,
+            displayName: authUser.displayName,
+            servers: []
+          });
+        }
+      });
+      
+        
       } else {
         setUser(null);
       }
